@@ -1,0 +1,38 @@
+{
+	"smtp":
+	{
+		"host": "smtp.gmail.com",
+		"port": 465,
+		"user": "mail@mail.com",
+		"passwd": "passwd",
+		"from": "mail@mail.com",
+		"from_name": "ZiTAL",
+		"to":
+		[
+			"mail@mail.com",
+			"mail2@mail.com"
+		],
+		"bcc":
+		[
+			"mail@mail.com",
+			"mail2@mail.com"
+		]
+	},
+	"probintziak":
+	[
+		"araba",
+		"bizkaia",
+		"gipuzkoa",
+		"burgos"
+	],
+	"tagak":
+	[
+		"peon",
+		"operador",
+		"operario",
+		"produccion",
+		"mudanza",
+		"repartidor",
+		"mozo"
+	 ]
+}
