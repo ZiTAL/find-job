@@ -59,8 +59,6 @@ foreach($results as $province => $values)
 }
 $html.="</ul>";
 
-// uriguenftm@gmail.com
-
 //header('Content-Type: text/html; charset=utf-8');
 //echo $html;
 //exit();
