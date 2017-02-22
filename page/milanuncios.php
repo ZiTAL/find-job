@@ -1,14 +1,14 @@
 <?php
-require_once('lib/curl.php');
+require_once(PATH."/lib/curl.php");
 
 class milanuncios extends page
 {
 	private $info;
 	private $curl;
-    
+
 	private $base_url = 'http://www.milanuncios.com';
 	private $url = '/ofertas-de-empleo-en-';
-	
+
 	private $province_array = array
 	(
 		'araba' => 'alava',
@@ -17,17 +17,17 @@ class milanuncios extends page
 		'gipuzkoa' => 'guipuzcoa',
 		'burgos' => 'burgos'
 	);
-    
+
 	public function __construct($info)
 	{
 		$this->info = $info;
 		$this->curl = new curl();
 	}
-    
+
 	public function request()
 	{
 		$urls = $this->prepareUrls();
-		
+
 		$result = array();
 		foreach($urls as $province => $value)
 		{
@@ -42,7 +42,7 @@ class milanuncios extends page
 						'demanda' => 'n',
 						'pagina' => $i
 					);
-					$content = $this->curl->request($url, 'GET', $params);   
+					$content = $this->curl->request($url, 'GET', $params);
 					$url_array = $this->parseUrl($content);
 					$result[$province] = array_merge($result[$province], $url_array);
 					$i++;
@@ -50,48 +50,45 @@ class milanuncios extends page
 				while(count($url_array)>0);
 			}
 		}
-            
+
 		return $result;
 	}
-    
+
     private function parseUrl($content)
     {
         $dom = new DOMDocument('1.0', 'utf-8');
         @$dom->loadHTML($content);
 
         $xpath = new DOMXpath($dom);
-        
+
         $result = array();
 
-        $ofertas = $xpath->query("//div[@id=\"cuerpo\"]/div[@class=\"x1\"]");
+        $ofertas = $xpath->query('//div[@id="cuerpo"]/div[@class="aditem"]');
 
         foreach($ofertas as $oferta)
         {
-            $x9 = $xpath->query("div[@class=\"x9\"]", $oferta);
-            $x7 = $xpath->query("div[@class=\"x7\"]", $oferta);
+		$container = $xpath->query('div[@class="aditem-detail-image-container"]', $oferta);
+		if($container->length<1)
+			$container = $xpath->query('div[@class="aditem-detail-container"]', $oferta);
+		$container = $container->item(0);
 
-            if($x9->length>0)
-                $x = $x9->item(0);
-            else
-                $x = $x7->item(0);
+                $a = $xpath->query('div[@class="aditem-detail"]/a[@class="aditem-detail-title"]', $container)->item(0);
+                $description = $xpath->query('div[@class="aditem-detail"]/div[@class="tx"]', $container)->item(0)->nodeValue;
 
-            if(isset($x))
-            {
-                $a = $xpath->query("a[@class=\"cti\"]", $x)->item(0);
-					$description = $xpath->query("div[@class=\"tx\"]", $x)->item(0);
- 
-					$result[] = array
-					(
-						'title' => $a->nodeValue,
-						'description' => $description->nodeValue,
-						'link' => $this->base_url.$a->getAttribute('href')
-					 );
-            }
-            unset($x);
+		if(!$this->urlExists($a->getAttribute('href')))
+		{
+			$this->urlInsert($a->getAttribute('href'));
+			$result[] = array
+			(
+				'title' => $a->nodeValue,
+				'description' => $description,
+				'link' => $this->base_url.$a->getAttribute('href')
+			);
+		}
         }
         return $result;
     }
-	
+
 	private function prepareUrls()
 	{
 		$urls = array();
