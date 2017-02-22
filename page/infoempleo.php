@@ -83,8 +83,6 @@ class infoempleo extends page
 			}
 		}
         }
-	print_r($result);
-	exit();
         return $result;
     }
 
