@@ -68,7 +68,8 @@ class infoempleo extends page
 		if($a->length>0 && $description->length>0)
 		{
 			$a = $a->item(0);
-			$description = $description->item(0);
+			$title = strip_tags(utf8_encode($a->nodeValue));
+			$description = $description->item(0)->nodeValue;
 
 	                if(!$this->urlExists($a->getAttribute('href')))
         	        {
@@ -76,8 +77,8 @@ class infoempleo extends page
 
 				$result[] = array
 				(
-					'title' => strip_tags($a->nodeValue),
-					'description' => $description->nodeValue,
+					'title' => $title,
+					'description' => $description,
 					'link' => $this->base_url.$a->getAttribute('href')
 				);
 			}
