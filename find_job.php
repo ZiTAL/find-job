@@ -70,9 +70,6 @@ class Find_job
 		}
 		$html.="</ul>";
 
-		echo $html;
-		exit();
-
 		//header('Content-Type: text/html; charset=utf-8');
 		//echo $html;
 		//exit();
