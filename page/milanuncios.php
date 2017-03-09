@@ -80,8 +80,8 @@ class milanuncios extends page
 			$this->urlInsert($a->getAttribute('href'));
 			$result[] = array
 			(
-				'title' => $a->nodeValue,
-				'description' => $description,
+				'title' => utf8_decode($a->nodeValue),
+				'description' => utf8_decode($description),
 				'link' => $this->base_url.$a->getAttribute('href')
 			);
 		}
